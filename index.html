@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Grammar Coach</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --accent-color: #ea4335;
+            --light-color: #f8f9fa;
+            --dark-color: #202124;
+            --gray-color: #5f6368;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 25px;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gray-color);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .output-section {
+            margin-top: 30px;
+        }
+        
+        .output-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--gray-color);
+        }
+        
+        .output-content {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 150px;
+            border: 1px solid #eee;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .error-message {
+            color: var(--accent-color);
+            background-color: rgba(234, 67, 53, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gemini Grammar Coach</h1>
+            <p class="tagline">AI-powered writing assistant to perfect your English</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <label for="user-text">Enter your text to check:</label>
+                <textarea id="user-text" placeholder="Type or paste your text here..."></textarea>
+                <div class="error-message" id="error-message"></div>
+                <button id="check-button" onclick="checkGrammar()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                    </svg>
+                    Check Grammar
+                </button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your text...</p>
+            </div>
+            
+            <div class="output-section">
+                <div class="output-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="var(--primary-color)" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    <h2>Grammar Suggestions</h2>
+                </div>
+                <div class="output-content" id="output-content">
+                    <p style="color: var(--gray-color);">Your grammar suggestions will appear here...</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Powered by Google Gemini AI | Not affiliated with Google</p>
+        </footer>
+    </div>
+
+    <script>
+        // Replace with your actual API key
+        const API_KEY = "AIzaSyB3i--ZJyZSUOkws4_DHx4u70Q2LvAPNAE";
+        
+        async function checkGrammar() {
+            const userText = document.getElementById('user-text').value.trim();
+            const outputContent = document.getElementById('output-content');
+            const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('error-message');
+            const checkButton = document.getElementById('check-button');
+            
+            // Clear previous error
+            errorElement.style.display = 'none';
+            
+            // Validate input
+            if (!userText) {
+                errorElement.textContent = "Please enter some text to check";
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Disable button and show loading
+            checkButton.disabled = true;
+            loadingElement.style.display = 'block';
+            outputContent.innerHTML = '<p style="color: var(--gray-color);">Processing your request...</p>';
+            
+            try {
+                // Initialize the model (this would be done differently in production)
+                const genai = await loadGemini();
+                genai.configure({apiKey: API_KEY});
+                const model = genai.getGenerativeModel({ model: "gemini-1.5-pro-latest"});
+                
+                const prompt = `You are an AI grammar and spelling coach. Check the following text for grammar, spelling, punctuation, and style errors.
+                
+                Provide the corrected version of the text and explain each change with brief, clear notes. Format your response using Markdown with headings, lists, and code blocks where appropriate.
+                
+                Text: "${userText}"`;
+                
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
+                
+                // Convert markdown to HTML
+                const html = marked.parse(text);
+                outputContent.innerHTML = html;
+            } catch (error) {
+                console.error("Error:", error);
+                outputContent.innerHTML = `<p style="color: var(--accent-color);">Error: ${error.message}</p>`;
+            } finally {
+                loadingElement.style.display = 'none';
+                checkButton.disabled = false;
+            }
+        }
+        
+        // Dynamically load the Gemini API
+        async function loadGemini() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://www.gstatic.com/generative-ai-sdk/genai-js/v1/genai.js';
+                script.onload = () => {
+                    resolve(google.generativeai);
+                };
+                script.onerror = () => {
+                    reject(new Error('Failed to load Gemini API'));
+                };
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Allow pressing Enter in textarea to submit (with Shift+Enter for new lines)
+        document.getElementById('user-text').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                checkGrammar();
+            }
+        });
+    </script>
+</body>
+</html>
