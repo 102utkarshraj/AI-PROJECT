@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Spelling and Grammar Coach</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4cc9f0;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #4bb543;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: var(--dark-color);
+      background-color: #f5f7ff;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .logo-icon {
+      font-size: 32px;
+      margin-right: 10px;
+      color: var(--primary-color);
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin: 0;
+      font-size: 32px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-weight: 300;
+      margin-top: 5px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      resize: vertical;
+      transition: border 0.3s ease;
+      margin-bottom: 20px;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+    
+    textarea::placeholder {
+      color: #adb5bd;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #output {
+      margin-top: 30px;
+      white-space: pre-wrap;
+      background: var(--light-color);
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      min-height: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .output-label {
+      display: block;
+      font-weight: 500;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    
+    .feature {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+    
+    .feature-icon {
+      font-size: 24px;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-icon">✍️</span>
+        <h1>AI Spelling and Grammar Coach</h1>
+      </div>
+      <p class="subtitle">Enhance your writing with AI-powered corrections and suggestions</p>
+    </header>
+    
+    <main>
+      <div class="card">
+        <label for="inputText"><strong>Enter your text for analysis:</strong></label>
+        <textarea id="inputText" placeholder="Type or paste your text here... Our AI will help you correct grammar, spelling, and improve clarity."></textarea>
+        
+        <button onclick="correctGrammar()">Analyze & Correct</button>
+        
+        <span class="output-label">Corrected Text:</span>
+        <div id="output">Your corrected text will appear here...</div>
+      </div>
+      
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">🔍</div>
+          <h3>Grammar Check</h3>
+          <p>Detects and corrects grammatical errors in real-time</p>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">✏️</div>
+          <h3>Spelling Correction</h3>
+          <p>Identifies and fixes spelling mistakes instantly</p>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">💡</div>
+          <h3>Writing Suggestions</h3>
+          <p>Offers improvements for clarity and style</p>
+        </div>
+      </div>
+    </main>
+    
+    <footer>
+      <p>© 2023 AI Spelling and Grammar Coach | Powered by Gemini AI</p>
+    </footer>
+  </div>
+
+  <script>
+    async function correctGrammar() {
+      const sentence = document.getElementById('inputText').value;
+      const outputDiv = document.getElementById('output');
+      outputDiv.innerText = 'Analyzing your text...';
+      outputDiv.style.borderLeftColor = '#ffc107'; // Yellow for processing
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/correct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sentence })
+        });
+
+        const data = await response.json();
+        outputDiv.innerText = data.result;
+        outputDiv.style.borderLeftColor = '#4bb543'; // Green for success
+      } catch (error) {
+        outputDiv.innerText = 'Error connecting to the API. Please try again later.';
+        outputDiv.style.borderLeftColor = '#f44336'; // Red for error
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
